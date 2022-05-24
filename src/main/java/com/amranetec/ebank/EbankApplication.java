@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import java.util.Date;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 @SpringBootApplication
@@ -28,7 +29,7 @@ public class EbankApplication {
             BankAccountRepository bankAccountRepository,
             AccountOperationRepository accountOperationRepository){
         return args -> {
-            Stream.of("Moussa","Amrane","Youssouf").forEach(name ->{
+            Stream.of("Issa","Cheikh","Tapha").forEach(name ->{
                 Customer customer = new Customer();
                 customer.setName(name);
                 customer.setEmail(name+"@gmail.com");
@@ -37,6 +38,7 @@ public class EbankApplication {
             customerRepository.findAll().forEach(customer -> {
                 //Current Account
                 CurrentAccount currentAccount = new CurrentAccount();
+                currentAccount.setId(UUID.randomUUID().toString());
                 currentAccount.setBalance(Math.random()*90000);
                 currentAccount.setCreatedAt(new Date());
                 currentAccount.setStatus(AccountStatus.CREATED);
@@ -46,6 +48,7 @@ public class EbankApplication {
 
                 //SavingAccount Account
                 SavingAccount savingAccount = new SavingAccount();
+                savingAccount.setId(UUID.randomUUID().toString());
                 savingAccount.setBalance(Math.random()*90000);
                 savingAccount.setCreatedAt(new Date());
                 savingAccount.setStatus(AccountStatus.CREATED);
