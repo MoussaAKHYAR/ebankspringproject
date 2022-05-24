@@ -18,6 +18,8 @@ public class BankAccount {
     private String id;
     private double balance;
     private Date createdAt;
+    //avoir l'enum en format string
+    @Enumerated(EnumType.STRING)
     private AccountStatus status;
     @ManyToOne
     private Customer customer;

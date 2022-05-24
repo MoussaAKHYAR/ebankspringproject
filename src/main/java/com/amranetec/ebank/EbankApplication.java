@@ -1,9 +1,11 @@
 package com.amranetec.ebank;
 
+import com.amranetec.ebank.entities.AccountOperation;
 import com.amranetec.ebank.entities.CurrentAccount;
 import com.amranetec.ebank.entities.Customer;
 import com.amranetec.ebank.entities.SavingAccount;
 import com.amranetec.ebank.enums.AccountStatus;
+import com.amranetec.ebank.enums.OperationType;
 import com.amranetec.ebank.repositories.AccountOperationRepository;
 import com.amranetec.ebank.repositories.BankAccountRepository;
 import com.amranetec.ebank.repositories.CustomerRepository;
@@ -56,6 +58,18 @@ public class EbankApplication {
                 savingAccount.setInterestRate(5.5);
                 bankAccountRepository.save(savingAccount);
             });
+
+            bankAccountRepository.findAll().forEach(acc -> {
+                for (int i = 0; i < 10 ; i++) {
+                    AccountOperation accountOperation = new AccountOperation();
+                    accountOperation.setOperationDate(new Date());
+                    accountOperation.setAmount(Math.random()*12000);
+                    accountOperation.setType(Math.random()>0.5? OperationType.DEBIT:OperationType.CREDIT);
+                    accountOperation.setBankAccount(acc);
+                    accountOperationRepository.save(accountOperation);
+                }
+            });
+
         };
     }
 }
