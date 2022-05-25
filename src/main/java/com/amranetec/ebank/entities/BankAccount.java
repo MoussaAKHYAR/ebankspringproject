@@ -23,6 +23,8 @@ public class BankAccount {
     private AccountStatus status;
     @ManyToOne
     private Customer customer;
-    @OneToMany(mappedBy = "bankAccount")
+    //par default on a FetchType.LAZY qui veut dire : mode paresseux il ne charge que les informations sur la table indiquée sans charger en memoire les données de l'autre table
+    //FetchType.EAGER : affiche les données de la table ainsi que celles de la table dont elle est liée
+    @OneToMany(mappedBy = "bankAccount", fetch = FetchType.LAZY)
     private List<AccountOperation> accountOperations;
 }
