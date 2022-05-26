@@ -19,7 +19,9 @@ import java.util.UUID;
 
 @Service
 @Transactional
+//comme on utilise lombok on ecrit cette anotation a la place de l'injection de dependence fait au niveau du constructeur
 @AllArgsConstructor
+//cette annotation est pour gerer les log donc elle remplace le log4j
 @Slf4j
 public class BankAccountServiceImpl implements BankAccountService {
     private CustomerRepository customerRepository;
@@ -119,7 +121,9 @@ public class BankAccountServiceImpl implements BankAccountService {
     }
 
     @Override
-    public void transfer(String accountIdSource, String accountIdDestination, double amount) {
+    public void transfer(String accountIdSource, String accountIdDestination, double amount) throws BankAccountNotFoundException, BalanceNotSufficientException {
+        debit(accountIdSource, amount, "Transfer to "+accountIdDestination);
+        credit(accountIdDestination, amount, "Transfer from "+accountIdSource);
 
     }
 }
