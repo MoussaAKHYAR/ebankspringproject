@@ -1,9 +1,8 @@
 package com.amranetec.ebank.services;
 
-import com.amranetec.ebank.entities.BankAccount;
-import com.amranetec.ebank.entities.CurrentAccount;
-import com.amranetec.ebank.entities.Customer;
-import com.amranetec.ebank.entities.SavingAccount;
+import com.amranetec.ebank.entities.*;
+import com.amranetec.ebank.enums.OperationType;
+import com.amranetec.ebank.exceptions.BalanceNotSufficientException;
 import com.amranetec.ebank.exceptions.BankAccountNotFoundException;
 import com.amranetec.ebank.exceptions.CustomerNotFoundException;
 import com.amranetec.ebank.repositories.AccountOperationRepository;
@@ -83,13 +82,40 @@ public class BankAccountServiceImpl implements BankAccountService {
     }
 
     @Override
-    public void debit(String accountId, double amount, String description) {
+    public void debit(String accountId, double amount, String description) throws BankAccountNotFoundException, BalanceNotSufficientException {
+        BankAccount bankAccount = getBankAccount(accountId);
+        if (bankAccount.getBalance()<amount)
+            throw new BalanceNotSufficientException("Balance not sufficient");
+
+        AccountOperation accountOperation = new AccountOperation();
+        accountOperation.setType(OperationType.DEBIT);
+        accountOperation.setAmount(amount);
+        accountOperation.setOperationDate(new Date());
+        accountOperation.setDescription(description);
+        accountOperation.setBankAccount(bankAccount);
+        accountOperationRepository.save(accountOperation);
+
+        //update de bank account that we debited
+        bankAccount.setBalance(bankAccount.getBalance()-amount);
+        bankAccountRepository.save(bankAccount);
 
     }
 
     @Override
-    public void credit(String accountId, double amount, String description) {
+    public void credit(String accountId, double amount, String description) throws BankAccountNotFoundException {
+        BankAccount bankAccount = getBankAccount(accountId);
 
+        AccountOperation accountOperation = new AccountOperation();
+        accountOperation.setType(OperationType.CREDIT);
+        accountOperation.setAmount(amount);
+        accountOperation.setOperationDate(new Date());
+        accountOperation.setDescription(description);
+        accountOperation.setBankAccount(bankAccount);
+        accountOperationRepository.save(accountOperation);
+
+        //update de bank account that we credited
+        bankAccount.setBalance(bankAccount.getBalance()+amount);
+        bankAccountRepository.save(bankAccount);
     }
 
     @Override
