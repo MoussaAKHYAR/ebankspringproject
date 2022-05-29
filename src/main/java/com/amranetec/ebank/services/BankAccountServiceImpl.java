@@ -1,10 +1,12 @@
 package com.amranetec.ebank.services;
 
+import com.amranetec.ebank.dtos.CustomerDto;
 import com.amranetec.ebank.entities.*;
 import com.amranetec.ebank.enums.OperationType;
 import com.amranetec.ebank.exceptions.BalanceNotSufficientException;
 import com.amranetec.ebank.exceptions.BankAccountNotFoundException;
 import com.amranetec.ebank.exceptions.CustomerNotFoundException;
+import com.amranetec.ebank.mappers.BankAccountMapperImpl;
 import com.amranetec.ebank.repositories.AccountOperationRepository;
 import com.amranetec.ebank.repositories.BankAccountRepository;
 import com.amranetec.ebank.repositories.CustomerRepository;
@@ -13,9 +15,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -27,6 +31,7 @@ public class BankAccountServiceImpl implements BankAccountService {
     private CustomerRepository customerRepository;
     private BankAccountRepository bankAccountRepository;
     private AccountOperationRepository accountOperationRepository;
+    private BankAccountMapperImpl bankAccountMapper;
 
     @Override
     public Customer saveCustomer(Customer customer) {
@@ -71,8 +76,14 @@ public class BankAccountServiceImpl implements BankAccountService {
     }
 
     @Override
-    public List<Customer> listCustomers() {
-        return null;
+    public List<CustomerDto> listCustomers() {
+        List<Customer> customers = customerRepository.findAll();
+        // List<CustomerDto> customerDtos = new ArrayList<>();
+        //
+        //        for (Customer customer: customers){
+        //            customerDtos.add(bankAccountMapper.fromCustomer(customer));
+        //        }
+        return customers.stream().map(customer -> bankAccountMapper.fromCustomer(customer)).collect(Collectors.toList());
     }
 
     @Override
@@ -126,4 +137,9 @@ public class BankAccountServiceImpl implements BankAccountService {
         credit(accountIdDestination, amount, "Transfer from "+accountIdSource);
 
     }
+    @Override
+     public List<BankAccount> bankAccountList()
+     {
+         return bankAccountRepository.findAll();
+     }
 }
