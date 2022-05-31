@@ -31,13 +31,13 @@ public class EbankApplication {
             BankAccountRepository bankAccountRepository,
             AccountOperationRepository accountOperationRepository){
         return args -> {
-            Stream.of("Issa","Cheikh","Tapha").forEach(name ->{
+           /* Stream.of("Issa","Cheikh","Tapha").forEach(name ->{
                 Customer customer = new Customer();
                 customer.setName(name);
                 customer.setEmail(name+"@gmail.com");
                 customerRepository.save(customer);
-            });
-            customerRepository.findAll().forEach(customer -> {
+            });*/
+           /* customerRepository.findAll().forEach(customer -> {
                 //Current Account
                 CurrentAccount currentAccount = new CurrentAccount();
                 currentAccount.setId(UUID.randomUUID().toString());
@@ -58,8 +58,8 @@ public class EbankApplication {
                 savingAccount.setInterestRate(5.5);
                 bankAccountRepository.save(savingAccount);
             });
-
-            bankAccountRepository.findAll().forEach(acc -> {
+*/
+            /*bankAccountRepository.findAll().forEach(acc -> {
                 for (int i = 0; i < 10 ; i++) {
                     AccountOperation accountOperation = new AccountOperation();
                     accountOperation.setOperationDate(new Date());
@@ -68,7 +68,7 @@ public class EbankApplication {
                     accountOperation.setBankAccount(acc);
                     accountOperationRepository.save(accountOperation);
                 }
-            });
+            });*/
 
         };
     }
